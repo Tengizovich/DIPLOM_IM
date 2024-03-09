@@ -1,15 +1,25 @@
 const uuid = require('uuid');
 const path = require('path');
-const { Device } = require('../models/models');
+const {Device, DeviceInfo} = require('../models/models');
 const ApiError = require('../error/ApiError');
 
 class deviceController {
     async create(req, res, next) {
         try {
-            const { name, price, brandId, typeId, info } = req.body;
+            let { name, price, brandId, typeId, info } = req.body;
             const { img } = req.files;
             let fileName = uuid.v4() + ".jpg";
             img.mv(path.resolve(__dirname, '..', 'static', fileName));
+
+            if (info) {
+                info = JSON.parse(info)
+                info.forEach(i =>
+                    DeviceInfo.create({
+                        title: i.title,
+                        description: i.description,
+                        deviceId: deviceId 
+                    }))
+            }
 
             const device = await Device.create({ name, price, brandId, typeId, img: fileName });
             return res.json(device);
@@ -26,7 +36,7 @@ class deviceController {
 
         let devices;
         if (!brandId && !typeId) {
-             devices = await Device.findAndCountAll({ limit, offset });
+            devices = await Device.findAndCountAll({ limit, offset });
         } else {
             devices = await Device.findAndCountAll({ where: { typeId, brandId }, limit, offset });
         }
@@ -34,7 +44,15 @@ class deviceController {
         return res.json(devices);
     }
 
-    async getOne(req, res, next) { 
+    async getOne(req, res, next) {
+        const {id} = req.params
+        const device = await Device.findOne(
+            {
+                where: {id},
+                include: [{model: DeviceInfo, as: 'info'}]
+            }
+            )
+            return res.json(device)
         // Add logic to fetch a single device based on ID
     }
 }
