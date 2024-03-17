@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { Button, Dropdown, Form, Row, Col } from 'react-bootstrap'; // Import Row and Col
 import { Context } from '../../index';
@@ -31,7 +31,7 @@ const CreateDevice = observer(({ show, onHide }) => {
     }
 
     const selectFile = e => {
-        setFile(e.targed.files[0])
+        setFile(e.target.files[0])
     }
 
     const addDevice = () => {
