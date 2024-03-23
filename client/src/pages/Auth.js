@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Button, Card, Container, Form, Row } from 'react-bootstrap'; // Added Row import
-import { NavLink, useLocation, useHystory } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Login_Route, Registration_Route, Shop_Route } from '../utils/consts';
 import { registration } from '../http/userApi';
 import { observer } from 'mobx-react-lite';
@@ -8,7 +8,7 @@ import { Context } from '..';
 
 const Auth = observer(() => {
     const {user} = useContext(Context)
-    const history = useHystory();
+    const navigate = useNavigate();
     const location = useLocation();
     const isLogin = location.pathname === Login_Route;
     const [email, setEmail] = useState('')
@@ -24,7 +24,7 @@ const Auth = observer(() => {
             }
             user.setUser(user)
             user.setIsAuth(true)
-            history.push(Shop_Route)
+            navigate(Shop_Route)
         } catch (e) {
             alert(e.response.data.message)
         }
