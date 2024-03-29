@@ -1,5 +1,4 @@
 require('dotenv').config()
-
 const express = require('express')
 const sequelize = require('./db')
 const models = require('./models/models')
@@ -18,21 +17,19 @@ app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
 app.use('/api', router)
 
-// Error handling middleware as the last middleware
+// Обработка ошибок, последний Middleware
 app.use(errorHandler)
 
 const start = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
-        app.listen(PORT, () => {
-            console.log(`Server started on port ${PORT}`);
-        });
+        app.listen(PORT, () => console.log(`Server started on port ${PORT}`))
     } catch (e) {
-        console.log(e);
+        console.log(e)
     }
 }
 
-start()
 
+start()
 
